@@ -1,0 +1,108 @@
+---
+title: "A survey of Large Language Models"
+author: "Romane Gallienne"
+date: "2023-07-11"
+date-format: long
+format: revealjs
+---
+
+# Hello World !
+
+IMAGE TIMELINE
+
+## What to expect ?
+
+1. Introduction
+2. Overview of LLMs
+3. Pre-Training
+4. Architecture
+5. Adaptation Tuning
+6. Utilization
+
+
+
+## Introduction
+
+- longstanding research challenge
+- Language Models (LM) aims to model generative likelihood of work sequences to predict the probabilities of future/missing tokens
+
+
+### Background of Language Modeling
+
+Research of LM has received extensive attention whch can be divided into four major development stages
+
+1. **Statistical language models (SLM)** : Build word prediction model based on Markov assumptions (predicting next word based on the most recent context) - ngram models
+2. **Neural Language Models (NLM)** : Probability of word sequences by neural networks (RNN). - word2vec 
+3. **Pretrained language models (PLM)** : pretraining/finetuning learning paradigm. - ELMo, BERT,GPT-2
+4. **Large Language Models (LLM)** : large-sized PLMs by scaling model size and data size
+
+### What about LLMs ?
+
+- Posing significant impact on AI community
+- display surprising emergent abilities
+
+BUT  
+- how LLMs obtain such abilities ?  
+- difficult for research community to train capable LLMs (computation resources)  
+- challenging to align LLMs with human values  
+- can produce toxic, fictitious, harmful content
+
+## Background for LLMs
+
+Based on Transformers architecture  
+Contains hundreds of billions of parameters
+
+Model performance depends on three factors :  
+- Model size  
+- Dataset size  
+- Training compute
+
+ 
+
+## Emergent abilities of LLMs
+
+"The abilities that are not present in small models but arise in large models"
+
+TODO
+
+## Pretraining
+
+### Data Source
+
+![](./images/datasource.png)
+
+### Data Source
+
+![](./images/datasets.png)
+
+### Data Preprocessing
+
+![](./images/preprocessing.png)
+
+### Architecture
+
+## Model Training
+
+## Adaptation
+
+## Availability
+
+### Publicly Available Model checkpoints or APIs
+
+Models with Tens of Billions of Parameters (10B-20B)  
+&nbsp;&nbsp;&nbsp; - Meta : LLaMA  
+&nbsp;&nbsp;&nbsp; - Google : mT5, UL2, Flan-T5  
+&nbsp;&nbsp;&nbsp; - BigScience : T0, mT0 (+ smaller versions of BLOOM)  
+&nbsp;&nbsp;&nbsp; - EleutherAI : GPT-NeoX-20B  
+&nbsp;&nbsp;&nbsp; - Salesforce : CodeGen  
+&nbsp;&nbsp;&nbsp; - Huawei : PanGu-α  
+ 
+## Publicly Available Model checkpoints or APIs
+
+Models with Hundreds of Billions of Parameters  
+&nbsp;&nbsp;&nbsp; - Meta : OPT, OPT-IML, Galactica  
+&nbsp;&nbsp;&nbsp; - BigScience : BLOOM, BLOOMZ  
+&nbsp;&nbsp;&nbsp; - OpenAI : GPT-3  
+&nbsp;&nbsp;&nbsp; - Zhipu.AI : GLM-130B  
+
+
