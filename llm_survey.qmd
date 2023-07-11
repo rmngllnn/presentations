@@ -3,106 +3,234 @@ title: "A survey of Large Language Models"
 author: "Romane Gallienne"
 date: "2023-07-11"
 date-format: long
-format: revealjs
+format: 
+    clean-revealjs:
+        slide-number: true
+        incremental: true
+        from: markdown+emoji
+        chalkboard: true
 ---
 
 # Hello World !
 
-IMAGE TIMELINE
-
-## What to expect ?
-
-1. Introduction
-2. Overview of LLMs
-3. Pre-Training
-4. Architecture
-5. Adaptation Tuning
-6. Utilization
+![](./images/timeline.png)
 
 
+# Availability
 
-## Introduction
+## Publicly Available Model checkpoints or APIs
+
+Models with Tens of Billions of Parameters (10B-20B)  
+&nbsp;&nbsp;&nbsp; - *Meta* : LLaMA  
+&nbsp;&nbsp;&nbsp; - *Google* : mT5, UL2, Flan-T5  
+&nbsp;&nbsp;&nbsp; - *BigScience* : T0, mT0 (+ smaller versions of BLOOM)  
+&nbsp;&nbsp;&nbsp; - *EleutherAI* : GPT-NeoX-20B  
+&nbsp;&nbsp;&nbsp; - *Salesforce* : CodeGen  
+&nbsp;&nbsp;&nbsp; - *Huawei* : PanGu-α  
+ 
+## Publicly Available Model checkpoints or APIs
+
+Models with Hundreds of Billions of Parameters  
+&nbsp;&nbsp;&nbsp; - *Meta* : OPT, OPT-IML, Galactica  
+&nbsp;&nbsp;&nbsp; - *BigScience* : BLOOM, BLOOMZ  
+&nbsp;&nbsp;&nbsp; - *OpenAI* : GPT-3, ChatGPT, GPT-4  
+&nbsp;&nbsp;&nbsp; - *Zhipu.AI* : GLM-130B
+
+
+# Introduction
 
 - longstanding research challenge
 - Language Models (LM) aims to model generative likelihood of work sequences to predict the probabilities of future/missing tokens
 
 
-### Background of Language Modeling
+## Background of Language Modeling
 
-Research of LM has received extensive attention whch can be divided into four major development stages
+Research of LM has received extensive attention which can be divided into four major development stages.
 
 1. **Statistical language models (SLM)** : Build word prediction model based on Markov assumptions (predicting next word based on the most recent context) - ngram models
 2. **Neural Language Models (NLM)** : Probability of word sequences by neural networks (RNN). - word2vec 
 3. **Pretrained language models (PLM)** : pretraining/finetuning learning paradigm. - ELMo, BERT,GPT-2
 4. **Large Language Models (LLM)** : large-sized PLMs by scaling model size and data size
 
-### What about LLMs ?
+## What about LLMs ?
 
 - Posing significant impact on AI community
-- display surprising emergent abilities
+- Display surprising emergent abilities
 
-BUT  
-- how LLMs obtain such abilities ?  
-- difficult for research community to train capable LLMs (computation resources)  
-- challenging to align LLMs with human values  
-- can produce toxic, fictitious, harmful content
+- Some questions  
+&nbsp;&nbsp;&nbsp; - How LLMs obtain such abilities ?    
+&nbsp;&nbsp;&nbsp; - Difficult for research community to train capable LLMs (computation resources)    
+&nbsp;&nbsp;&nbsp; - Challenging to align LLMs with human values    
+&nbsp;&nbsp;&nbsp; - Can produce toxic, fictitious, harmful content  
 
 ## Background for LLMs
 
-Based on Transformers architecture  
-Contains hundreds of billions of parameters
+- Based on Transformers architecture  
+- Contains hundreds of billions of parameters
 
+::: {.fragment}
 Model performance depends on three factors :  
 - Model size  
 - Dataset size  
 - Training compute
+:::
 
- 
 
-## Emergent abilities of LLMs
+# Pretraining
 
-"The abilities that are not present in small models but arise in large models"
-
-TODO
-
-## Pretraining
-
-### Data Source
+## Data Source
 
 ![](./images/datasource.png)
 
-### Data Source
+## Data Source
 
 ![](./images/datasets.png)
 
-### Data Preprocessing
+## Data Preprocessing
 
 ![](./images/preprocessing.png)
 
-### Architecture
+## Architecture
 
-## Model Training
+![](./images/architecture.png)
 
-## Adaptation
+## Pre-training task
 
-## Availability
+### Language Modeling (LM)
 
-### Publicly Available Model checkpoints or APIs
+Most commonly used objective to pre-train decoder-only LLMs
 
-Models with Tens of Billions of Parameters (10B-20B)  
-&nbsp;&nbsp;&nbsp; - Meta : LLaMA  
-&nbsp;&nbsp;&nbsp; - Google : mT5, UL2, Flan-T5  
-&nbsp;&nbsp;&nbsp; - BigScience : T0, mT0 (+ smaller versions of BLOOM)  
-&nbsp;&nbsp;&nbsp; - EleutherAI : GPT-NeoX-20B  
-&nbsp;&nbsp;&nbsp; - Salesforce : CodeGen  
-&nbsp;&nbsp;&nbsp; - Huawei : PanGu-α  
- 
-## Publicly Available Model checkpoints or APIs
+<br/>
+Given a sequence of tokens $𝐱=\{x_1,…,x_n\}$, the LM task aims to autoregressively predict the target tokens $x_i$ based on the preceding tokens $x_{<i}$ in a sequence
 
-Models with Hundreds of Billions of Parameters  
-&nbsp;&nbsp;&nbsp; - Meta : OPT, OPT-IML, Galactica  
-&nbsp;&nbsp;&nbsp; - BigScience : BLOOM, BLOOMZ  
-&nbsp;&nbsp;&nbsp; - OpenAI : GPT-3  
-&nbsp;&nbsp;&nbsp; - Zhipu.AI : GLM-130B  
+<br/>
+Training objective is to maximize the following likelihood : 
+$\mathcal{L}_{LM}(𝐱)=\overset{n}{\underset{i=1}{∑}} \log ⁡P(x_i|x_{<i})$
+
+## Pre-training task
+
+### Denoising Autoencoding (DAE)
+
+Inputs $𝐱_{\backslash\tilde{𝐱}}$ for DAE task are corrupted text with randomly replaced spans.
+
+Trained to recover the replaced tokens $\tilde{x}$
+
+training objective of DAE is denoted as :
+$\mathcal{L}_{DAE}(𝐱)=\log⁡ P(\tilde{𝐱}|𝐱_{\backslash\tilde{𝐱}})$
 
 
+# Model Training
+
+## Optimization settings
+
+::: {.panel-tabset}
+#### Batch Training
+Usually large (~ 8k examples or 16M tokens)  
+For GPT-3 and PaLM, dynamically increases during training
+
+#### Learning Rate
+Warm-up and decay strategies during pretraining
+
+#### Optimizer
+usually Adam and AdamW  
+also Adafactor (variant of Adam)
+:::
+
+## Scalable training techniques
+
+::: {.panel-tabset}
+#### 3D parallelism
+Data, Pipeline and Tensor parallelism
+
+#### ZeRO (DeepSeed Library)
+Focuses on the issue of memory redundancy in data parallelism  
+Aims to retain only a fraction of data on each GPU, while the rest can be retrieved from other GPUs when required
+
+In PyTorch : FullyShardedDataParallel (FSDP)
+
+#### Mixed Precision Training
+To reduce memory usage, use of FP16 (16-bit floating point numbers)
+:::
+
+# Adaptation
+
+## Instruction Tuning
+
+### Formatted Instance Construction
+
+![](./images/FormattedInstanceConstruction.png)
+
+## Instruction Tuning
+
+### Instruction Tuning Strategies
+
+- Balancing Data Distribution
+- Combining Instruction Tuning and Pre-Training
+
+## Instruction Tuning
+
+### Effect of Instruction Tuning
+
+- Performance Improvement
+- Task Generalization
+
+## Alignment Tuning
+
+LLMs generations sometimes exhibit unintended behavior (false information, biased expressions, etc.) and lacks the consideration of human values or preferences.
+
+<br/>
+Such an alignement requires considering different criteria and might harm general abilities of LLMs (*alignement tax*)
+
+## Alignment Criteria
+
+* Helpfulness
+* Honesty
+* Harmlessness
+
+## Reinforcement Learning from Human Feedback
+
+- Human Labeler Selection $\rightarrow$ who is going to "align" the model
+- Human Feedback Collection $\rightarrow$ how the alignment is made
+- Use of algorithm to align LLM
+
+# Utilization
+
+![](./images/icl_cot.png)
+
+## Language Generation
+
+- *Language Modeling* predicts the next token based on the previous ones.
+- *Conditional Text Generation* generates satisfying specific task (Machine Translation, Text Summarization)
+- *Code Synthesis* generates formal language
+
+## Major Issues
+
+- Controllable generation $\rightarrow$ use of the right prompt, control of text generated
+
+- Specialized generation $\rightarrow$ specific domains that need specific vocabulary (injecting new knowledge can result in forgetting other abilities)
+
+## Knowledge Utilization
+
+Ability of Intelligent System to accomplish knowledge-intensive tasks (Q&A)
+
+## Major Issues
+
+- *Hallucination* : information generated in conflict with existing source or can't be verified
+
+- *Knowledge recency* : problem of updating knowledge of the model
+
+## Complex Reasoning
+
+- *Knowledge reasoning* relies on logical relations and evidence about factual knowledge to answer given question
+
+- *Symbolic reasoning* focus on manipulating symbols in a formal rule setting
+
+- *Mathematical reasoning* needs to comprehensively use mathematical knowledge, logic and computation for solving problems or generating proof statements
+
+## Major Issues
+
+- *Inconsistency* : LLMs can generate correct answer following an invalid reasoning path
+
+- *Numerical computation* : difficulties in involved numerical computation especially for symbols rarely seen during pretraining
+
+# Thank your for listening and participating :slightly_smiling_face:
