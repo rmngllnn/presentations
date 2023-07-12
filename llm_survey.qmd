@@ -160,19 +160,6 @@ To reduce memory usage, use of FP16 (16-bit floating point numbers)
 
 ![](./images/FormattedInstanceConstruction.png)
 
-## Instruction Tuning
-
-### Instruction Tuning Strategies
-
-- Balancing Data Distribution
-- Combining Instruction Tuning and Pre-Training
-
-## Instruction Tuning
-
-### Effect of Instruction Tuning
-
-- Performance Improvement
-- Task Generalization
 
 ## Alignment Tuning
 
